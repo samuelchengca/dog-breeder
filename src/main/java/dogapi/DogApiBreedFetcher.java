@@ -26,7 +26,7 @@ public class DogApiBreedFetcher implements BreedFetcher {
      */
     @Override
     public List<String> getSubBreeds(String breed) {
-        String url = "https://dog.ceo/api/breed/\"" + breed.toLowerCase() + "/list";
+        String url = "https://dog.ceo/api/breed/" + breed.toLowerCase() + "/list";
         Request request = new Request.Builder()
                 .url(url)
                 .build();
@@ -39,13 +39,13 @@ public class DogApiBreedFetcher implements BreedFetcher {
             }
 
             String jsonBase = response.body().string();
-            JSONArray jsonArray = new JSONArray(jsonBase);
+            JSONObject jsonObject = new JSONObject(jsonBase);
 
             if (!jsonObject.getString("status").equals("successful")) {
                 throw new BreedNotFoundException("Breed is not found:" + breed);
             }
 
-            JSONArray subBreedsArray = jsonObject.getJsonArray("message");
+            JSONArray subBreedsArray = jsonObject.getJSONArray("message");
             List<String> subBreeds = new ArrayList<>();
             for (int i = 0; i < subBreedsArray.length(); i++) {
                 subBreeds.add(subBreedsArray.getString(i));
